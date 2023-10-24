@@ -138,3 +138,19 @@ export  const updatePost = async (req,res) =>{
         })
     }
 }
+
+//Create the post
+export const addPost = async (req,res) =>{
+    try{
+        const {title, desc,cat,img, token} = req.body;
+        
+    }catch(err){
+        console.log("Error ->updatePosts :",err);
+
+        return res.status(500).json({
+            status : false,
+            message : "Server Error in Updating Posts",
+            Error : err.message,
+        })
+    }
+}
