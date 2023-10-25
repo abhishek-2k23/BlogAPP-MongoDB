@@ -58,13 +58,24 @@ export const getPost = async (req, res) => {
     //get the postid from the params
     const postID = req.params.id;
 
-    const postData = await posts.findById(postID);
+    //find the post with postID
+    let postData = await posts.findById(postID);
+
+    //find the user of the post
+    const user = await users.findById(postData.User);
+
+    //add username with the postData
+     postData = postData.toObject();
+     postData.name = user.name;
+
+     console.log("single post data, " ,postData)
 
     console.log("working good ->getPost");
     return res.status(200).json({
       status: true,
       message: `post fetched of postID = ${postID}`,
       data: postData,
+      
     });
   } catch (err) {
     console.log("Error ->getPosts :", err);
@@ -90,7 +101,7 @@ export const deletePost = async (req, res) => {
     const user = await users.findById(postData.User);
 
     //updating the user Post data
-    user.Posts = user.Posts.filter((ID) => ID.toString() !== postID);
+    user.Post = user.Post.filter((ID) => ID.toString() !== postID);
 
     //now save the updated user Data.
     const updatedUser = await user.save();
@@ -164,18 +175,20 @@ export const addPost = async (req, res) => {
     }
 
     //verify the token
-    const decode = jwt.verify(token,process.env.JWT_SECRET);
-    console.log(typeof(decode))
-    console.log("decode : ",decode);
+    // const decode = jwt.verify(token,process.env.JWT_SECRET);
+    // console.log(typeof(decode))
+    // console.log("decode : ",decode);
 
     //find user to add post data 
     // const user = await users.find({decode.id});
 
+    // token is coming in the form of string so convert them into the Object
+    const tokenOBJ = JSON.parse(token);
     //add postdata to database
-    const postData = await posts.create({title,desc,img,cat,User:decode.id});
+    const postData = await posts.create({title,desc,img,cat,User:tokenOBJ._id});
     
     //add postID to the userDatabase
-    const updatedUser = await users.findByIdAndUpdate(decode.id,{$push : {Post : postData._id}},{new : true});
+    const updatedUser = await users.findByIdAndUpdate(tokenOBJ._id,{$push : {Post : postData._id}},{new : true});
 
     return res.status(200).json({
         status : true,

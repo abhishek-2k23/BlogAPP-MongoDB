@@ -94,11 +94,12 @@ export const login = async (req, res) => {
 
         //sending the cookies
         res.cookie("userCookie",token,options);
-        console.log("cookie sent")
+
         //removing the unwanted infos
         userExist = userExist.toObject();
         userExist.password = undefined;
         userExist.token = token;
+        userExist.Post = undefined;
 
         console.log("user Logged in : ",userExist)
       return res.status(200).json({
