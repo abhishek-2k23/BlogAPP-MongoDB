@@ -6,6 +6,7 @@ dotenv.config();
 import cors from "cors";
 import fileupload from "express-fileupload";
 import cookieParser from "cookie-parser";
+import { cloudinaryConnect } from "./Configuration/cloudinary.js";
 
 // app intialization
 const app = express();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 //configurations
 dbConnection();
+cloudinaryConnect();
 
 //server up
 app.listen(process.env.DB_PORT,()=>{console.log("server is up at ",process.env.DB_PORT)});

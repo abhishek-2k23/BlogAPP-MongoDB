@@ -4,13 +4,15 @@ import express from "express";
 const postRouter = express.Router();
 
 //controller imports
-import { getPosts ,getPost,deletePost,updatePost} from "../Controllers/post.js";
+import { getPosts ,getPost,deletePost,updatePost,uploadToCloudinary,addPost} from "../Controllers/post.js";
 
 //creating routes
 postRouter.get("/",getPosts);
 postRouter.get("/:id",getPost);
 postRouter.delete("/:id",deletePost);
 postRouter.put("/:id",updatePost);
+postRouter.post("/upload",uploadToCloudinary);
+postRouter.post("/addPost",addPost);
 
 
 //exporting Router
