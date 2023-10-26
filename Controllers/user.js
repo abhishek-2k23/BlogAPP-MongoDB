@@ -71,7 +71,7 @@ export const login = async (req, res) => {
         message: "User not registed.",
       });
     }
-    console.log("userExist : ",userExist);
+    // console.log("userExist : ",userExist);
     //if user exist then check for the password
     if (await bcrypt.compare(password, userExist.password)) {
 
@@ -101,7 +101,7 @@ export const login = async (req, res) => {
         userExist.token = token;
         userExist.Post = undefined;
 
-        console.log("user Logged in : ",userExist)
+        // console.log("user Logged in : ",userExist)
       return res.status(200).json({
         status: true,
         message: "logged in successfully.",

@@ -68,7 +68,7 @@ export const getPost = async (req, res) => {
      postData = postData.toObject();
      postData.name = user.name;
 
-     console.log("single post data, " ,postData)
+    //  console.log("single post data, " ,postData)
 
     console.log("working good ->getPost");
     return res.status(200).json({
@@ -245,7 +245,7 @@ export const uploadToCloudinary = async (req, res) => {
     //file supported type
     const supportedType = ["jpg", "jpeg", "png"];
 
-    console.log(image);
+    // console.log(image);
     //check for the supported type
     const imageType = image.name.split(".")[1];
 
@@ -260,7 +260,7 @@ export const uploadToCloudinary = async (req, res) => {
         image.tempFilePath,
         options
       );
-      console.log("File uploaded to cloudinary : ", response);
+      // console.log("File uploaded to cloudinary : ", response);
 
       res
         .status(200)
