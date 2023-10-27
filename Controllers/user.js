@@ -19,7 +19,11 @@ export const register = async (req, res) => {
     //check for userExists
     const userExist = await users.find({email});
 
-    if(userExist){
+    //now convert this userExist to array to check 
+    // console.log(userExist);
+    // console.log(userExist.length);
+
+    if(userExist.length > 0){
         return res.status(401).json({
             status : false,
             message : "user already exists",
