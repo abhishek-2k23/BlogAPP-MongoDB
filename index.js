@@ -1,6 +1,5 @@
 //imports
 import express from "express";
-import dbConnection from "./Configuration/db.js";
 import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
@@ -12,9 +11,16 @@ import { cloudinaryConnect } from "./Configuration/cloudinary.js";
 // app intialization
 const app = express();
 
+const corsOptions = {
+    origin: '*',
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type,Authorization',
+  };
+
 //app using middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(fileupload({
     useTempFiles : true,
     tempFileDir : '/tmp/'
@@ -22,24 +28,27 @@ app.use(fileupload({
 app.use(cookieParser());
 
 //for serverless 
-app.use((req, res,error, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+// app.use((req, res,error, next) => {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-    if(req.method === "OPTIONS"){
-        res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-        return res.status(200).json({});
-    }
+//     if(req.method === "OPTIONS"){
+//         res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//         return res.status(200).json({});
+//     }
 
-    next();
-})
-//configurations
-dbConnection();
+//     next();
+// })
+
 cloudinaryConnect();
 
 //server up
-app.get((req,res)=>{res.send(`<h1>Welcome to the Home Route of the Blog App Backend`)});
-
+app.get("/", (req,res)=>{
+  return {
+    statusCode: 200,
+    body: JSON.stringify("Server up and running"),
+  }
+});
 
 
 //Route Mounting
@@ -50,9 +59,5 @@ import userRouter from "./Routes/user.js";
 app.use("/post",postRouter);
 app.use("/auth",userRouter);
 
-
-
 //exporting our app on serverless
-
-
 export {app};
