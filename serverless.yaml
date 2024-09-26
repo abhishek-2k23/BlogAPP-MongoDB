@@ -1,21 +1,17 @@
 org: iamabhishek01
-service: BlogApi
+service: blogapp-serverless-api
 
 provider:
   name: aws
   runtime: nodejs20.x
   region: ap-south-1
-  timeout: 15
+  timeout: 30
 
 functions:
   api:
     handler: serverless.AppHandler
     events:
-      - http:
-          path: /
-          method: ANY
-          
-      
+      - httpApi: "*"
     environment:
       DB_PORT: 4010
       DB_URL: mongodb+srv://abhishek:qdknt3dO9EqptuqE@cluster0.k1jynpp.mongodb.net/BlogAppDB
@@ -27,3 +23,5 @@ functions:
       redis_db_url: ePJaiSQKR4yZZfxojxbBX7zbwlIXdpTf
       redis_password: redis-19091.c212.ap-south-1-1.ec2.redns.redis-cloud.com
       redis_db_port: 19091
+plugins:
+  - serverless-offline
