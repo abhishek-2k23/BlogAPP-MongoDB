@@ -1,4 +1,4 @@
-import http from 'http';
+import https from 'https';
 
 // Replace with your backend URL
 const SERVER_URL = 'https://blogapp-mongodb.onrender.com';
@@ -17,7 +17,7 @@ const isRestrictedTime = () => {
 const wakeUpServer = () => {
   setInterval(() => {
     if (!isRestrictedTime()) {
-      http.get(SERVER_URL, (res) => {
+      https.get(SERVER_URL, (res) => {
         console.log(`Pinging server - Status: ${res.statusCode}`);
       }).on('error', (err) => {
         console.error('Error pinging server:', err.message);
