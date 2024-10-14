@@ -28,4 +28,4 @@ const wakeUpServer = () => {
   }, 14 * 60 * 1000); // Ping every 5 minutes
 };
 
-wakeUpServer();
+export default wakeUpServer;
