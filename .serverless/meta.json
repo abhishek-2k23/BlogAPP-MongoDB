@@ -1,0 +1,436 @@
+{
+  "P:\\Development\\BharatIntern Projects\\BlogAPP-MongoDB": {
+    "versionSfCore": null,
+    "versionFramework": "4.4.2",
+    "isWithinCompose": false,
+    "isCompose": false,
+    "composeOrgName": null,
+    "composeResolverProviders": {
+      "default-aws-credential-resolver": "<REDACTED>"
+    },
+    "composeServiceName": null,
+    "servicePath": "P:\\Development\\BharatIntern Projects\\BlogAPP-MongoDB",
+    "serviceConfigFileName": "serverless.yaml",
+    "service": {
+      "org": "iamabhishek01",
+      "service": "blogapp-serverless-api",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs20.x",
+        "region": "ap-south-1",
+        "timeout": 30,
+        "stage": "dev",
+        "versionFunctions": true,
+        "iam": {
+          "role": {
+            "statements": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "iot:*"
+                ],
+                "Resource": "*"
+              }
+            ]
+          }
+        },
+        "compiledCloudFormationTemplate": {
+          "AWSTemplateFormatVersion": "2010-09-09",
+          "Description": "The AWS CloudFormation template for this Serverless application",
+          "Resources": {
+            "ApiLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/blogapp-serverless-api-dev-api"
+              }
+            },
+            "IamRoleLambdaExecution": {
+              "Type": "AWS::IAM::Role",
+              "Properties": {
+                "AssumeRolePolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Service": [
+                          "lambda.amazonaws.com"
+                        ]
+                      },
+                      "Action": [
+                        "sts:AssumeRole"
+                      ]
+                    }
+                  ]
+                },
+                "Policies": [
+                  {
+                    "PolicyName": {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "blogapp-serverless-api",
+                          "dev",
+                          "lambda"
+                        ]
+                      ]
+                    },
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:TagResource"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/blogapp-serverless-api-dev*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:PutLogEvents"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/blogapp-serverless-api-dev*:*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "iot:*"
+                          ],
+                          "Resource": "*"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Path": "/",
+                "RoleName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "blogapp-serverless-api",
+                      "dev",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "lambdaRole"
+                    ]
+                  ]
+                }
+              }
+            },
+            "ApiLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-ap-south-1-81c6cd67-3382",
+                  "S3Key": "serverless/blogapp-serverless-api/dev/1727292205445-2024-09-25T19:23:25.445Z/blogapp-serverless-api.zip"
+                },
+                "Handler": "index.handler",
+                "Runtime": "nodejs20.x",
+                "FunctionName": "blogapp-serverless-api-dev-api",
+                "MemorySize": 1024,
+                "Timeout": 30,
+                "Environment": {
+                  "Variables": {
+                    "DB_PORT": "4010",
+                    "DB_URL": "mongodb+srv://abhishek:qdknt3dO9EqptuqE@cluster0.k1jynpp.mongodb.net/BlogAppDB",
+                    "JWT_SECRET": "<REDACTED>",
+                    "api_key": "<REDACTED>",
+                    "cloud_name": "daamrpzus",
+                    "api_secret": "<REDACTED>",
+                    "redis_db_url": "ePJaiSQKR4yZZfxojxbBX7zbwlIXdpTf",
+                    "redis_password": "<REDACTED>",
+                    "redis_db_port": "19091",
+                    "SLS_IOT_ENDPOINT": "a1di3pt73msipg-ats.iot.ap-south-1.amazonaws.com",
+                    "SLS_SERVICE": "blogapp-serverless-api",
+                    "SLS_STAGE": "dev",
+                    "SLS_FUNCTION": "api"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "ApiLogGroup"
+              ]
+            },
+            "ApiLambdaVersiongcbdjEpINwL3lBdf8RUK9ecHxLjwDncgrjZLOny7M": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "ApiLambdaFunction"
+                },
+                "CodeSha256": "XHrh44eCbWkn3r7S9pWyfd/gcFTvH5VwB1CIwWx/ErE="
+              }
+            },
+            "HttpApi": {
+              "Type": "AWS::ApiGatewayV2::Api",
+              "Properties": {
+                "Name": "dev-blogapp-serverless-api",
+                "ProtocolType": "HTTP"
+              }
+            },
+            "HttpApiStage": {
+              "Type": "AWS::ApiGatewayV2::Stage",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "StageName": "$default",
+                "AutoDeploy": true,
+                "DefaultRouteSettings": {
+                  "DetailedMetricsEnabled": false
+                }
+              }
+            },
+            "ApiLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "ApiLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationApi": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "ApiLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRouteDefault": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "$default",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationApi"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationApi"
+            }
+          },
+          "Outputs": {
+            "ServerlessDeploymentBucketName": {
+              "Value": "serverless-framework-deployments-ap-south-1-81c6cd67-3382",
+              "Export": {
+                "Name": "sls-blogapp-serverless-api-dev-ServerlessDeploymentBucketName"
+              }
+            },
+            "ApiLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "ApiLambdaVersiongcbdjEpINwL3lBdf8RUK9ecHxLjwDncgrjZLOny7M"
+              },
+              "Export": {
+                "Name": "sls-blogapp-serverless-api-dev-ApiLambdaFunctionQualifiedArn"
+              }
+            },
+            "HttpApiId": {
+              "Description": "Id of the HTTP API",
+              "Value": {
+                "Ref": "HttpApi"
+              },
+              "Export": {
+                "Name": "sls-blogapp-serverless-api-dev-HttpApiId"
+              }
+            },
+            "HttpApiUrl": {
+              "Description": "URL of the HTTP API",
+              "Value": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "https://",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    ".execute-api.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "Export": {
+                "Name": "sls-blogapp-serverless-api-dev-HttpApiUrl"
+              }
+            }
+          }
+        },
+        "vpc": {}
+      },
+      "functions": {
+        "api": {
+          "handler": "index.handler",
+          "events": [
+            {
+              "httpApi": "*",
+              "resolvedMethod": "ANY"
+            }
+          ],
+          "environment": {
+            "DB_PORT": "4010",
+            "DB_URL": "mongodb+srv://abhishek:qdknt3dO9EqptuqE@cluster0.k1jynpp.mongodb.net/BlogAppDB",
+            "JWT_SECRET": "<REDACTED>",
+            "api_key": "<REDACTED>",
+            "cloud_name": "daamrpzus",
+            "api_secret": "<REDACTED>",
+            "redis_db_url": "ePJaiSQKR4yZZfxojxbBX7zbwlIXdpTf",
+            "redis_password": "<REDACTED>",
+            "redis_db_port": "19091",
+            "SLS_IOT_ENDPOINT": "a1di3pt73msipg-ats.iot.ap-south-1.amazonaws.com",
+            "SLS_SERVICE": "blogapp-serverless-api",
+            "SLS_STAGE": "dev",
+            "SLS_FUNCTION": "api"
+          },
+          "name": "blogapp-serverless-api-dev-api",
+          "originalHandler": "serverless.AppHandler",
+          "runtime": "nodejs20.x",
+          "package": {
+            "artifact": "P:\\Development\\BharatIntern Projects\\BlogAPP-MongoDB\\.serverless\\blogapp-serverless-api.zip"
+          },
+          "memory": 1024,
+          "timeout": 30,
+          "vpc": {},
+          "versionLogicalId": "ApiLambdaVersiongcbdjEpINwL3lBdf8RUK9ecHxLjwDncgrjZLOny7M"
+        }
+      },
+      "plugins": [
+        "serverless-offline"
+      ]
+    },
+    "serviceRawFile": "org: iamabhishek01\r\nservice: blogapp-serverless-api\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: nodejs20.x\r\n  region: ap-south-1\r\n  timeout: 30\r\n\r\nfunctions:\r\n  api:\r\n    handler: serverless.AppHandler\r\n    events:\r\n      - httpApi: \"*\"\r\n    environment:\r\n      DB_PORT: 4010\r\n      DB_URL: mongodb+srv://abhishek:qdknt3dO9EqptuqE@cluster0.k1jynpp.mongodb.net/BlogAppDB\r\n      JWT_SECRET : secret_key \r\n      api_key: 978574483849299\r\n      cloud_name: daamrpzus\r\n      api_secret: XvkbJn6Deql6Q8PzoH565_cxQcA\r\n\r\n      redis_db_url: ePJaiSQKR4yZZfxojxbBX7zbwlIXdpTf\r\n      redis_password: redis-19091.c212.ap-south-1-1.ec2.redns.redis-cloud.com\r\n      redis_db_port: 19091\r\nplugins:\r\n  - serverless-offline\r\n",
+    "command": [
+      "dev"
+    ],
+    "options": {},
+    "error": null,
+    "params": {},
+    "machineId": "c69d8d6370208f93a6d9d6d997744190",
+    "stage": "dev",
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "dd49d341-d7b1-4e51-9068-2e79199185cd",
+    "orgName": "iamabhishek01",
+    "userId": "Z40Pdbh7LL2KzZQR1w",
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "userName": "iamabhishek01",
+    "subscription": null,
+    "userEmail": "its.me.abhishek012@gmail.com",
+    "serviceProviderAwsRegion": "ap-south-1",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "905418087605",
+    "projectType": "traditional",
+    "versionSf": "4.4.2",
+    "serviceProviderAwsCfStackName": "blogapp-serverless-api-dev",
+    "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:ap-south-1:905418087605:stack/blogapp-serverless-api-dev/b9cf3c00-78fd-11ef-9669-023a7931fc69",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:ap-south-1:905418087605:stack/blogapp-serverless-api-dev/b9cf3c00-78fd-11ef-9669-023a7931fc69",
+    "serviceProviderAwsCfStackCreated": "2024-09-22T16:14:21.212Z",
+    "serviceProviderAwsCfStackUpdated": "2024-09-25T19:23:33.974Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "ApiLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:ap-south-1:905418087605:function:blogapp-serverless-api-dev-api:3",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-blogapp-serverless-api-dev-ApiLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "HttpApiId",
+        "OutputValue": "armgqu1byd",
+        "Description": "Id of the HTTP API",
+        "ExportName": "sls-blogapp-serverless-api-dev-HttpApiId"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "serverless-framework-deployments-ap-south-1-81c6cd67-3382",
+        "ExportName": "sls-blogapp-serverless-api-dev-ServerlessDeploymentBucketName"
+      },
+      {
+        "OutputKey": "HttpApiUrl",
+        "OutputValue": "https://armgqu1byd.execute-api.ap-south-1.amazonaws.com",
+        "Description": "URL of the HTTP API",
+        "ExportName": "sls-blogapp-serverless-api-dev-HttpApiUrl"
+      }
+    ]
+  }
+}

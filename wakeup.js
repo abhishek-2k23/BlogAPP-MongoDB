@@ -4,8 +4,8 @@ import https from 'https';
 const SERVER_URL = 'https://blogapp-mongodb.onrender.com';
 
 // Define the restricted hours (e.g., between 12 AM and 6 AM)
-const RESTRICTED_START_HOUR = 0; // Midnight (0:00)
-const RESTRICTED_END_HOUR = 8; // 6:00 AM
+const RESTRICTED_START_HOUR = 22; // 11:30 PM
+const RESTRICTED_END_HOUR = 8; // 8:00 AM
 
 // Function to check if the current time is within the restricted period
 const isRestrictedTime = () => {
